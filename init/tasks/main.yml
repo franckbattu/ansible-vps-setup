@@ -1,0 +1,22 @@
+---
+- name: Mise à jour des paquets
+  apt:
+    update_cache: yes
+
+- name: Création du groupe
+  when: username is defined
+  group:
+    name: "{{ username }}"
+    state: present
+
+- name: Création d'un utilisateur
+  when: username is defined
+  user:
+    user: "{{ username }}"
+    password: "{{ password | password_hash('sha512') }}"
+    group: "{{ username }}"
+    groups: 
+      - sudo 
+    append: yes
+    update_password: on_create
+    shell: /bin/bash

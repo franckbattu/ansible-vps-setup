@@ -1,0 +1,8 @@
+- name: Outils | Installation
+  apt:
+    name:
+      - vim
+      - git
+      - rsync
+      - fail2ban
+      - make

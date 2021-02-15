@@ -1,0 +1,38 @@
+- name: Docker | Prérequis
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg-agent
+      - software-properties-common
+    state: present
+- name: Docker | Docker GPG Key
+  when: ansible_distribution == 'Ubuntu'
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+- name: Docker | Docker repository
+  when: ansible_distribution == 'Ubuntu'
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu  {{ ansible_distribution_release }} stable
+    state: present
+- name: Docker | Installation
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose
+    state: present
+- name: Docker | Ajout de l'utilisateur au groupe docker
+  user:
+    name: "{{ username }}"
+    groups: 
+      - docker
+    append: yes
+
+- name: Installer docker-compose
+  get_url: 
+    url : https://github.com/docker/compose/releases/download/1.27.4/docker-compose-Linux-x86_64
+    dest: /usr/local/bin/docker-compose
+    mode: 'u+x,g+x'

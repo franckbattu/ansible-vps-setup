@@ -1,0 +1,35 @@
+---
+- name: Firewall | Installation de UFW
+  become: yes
+  apt:
+    name: ufw
+    state: present
+  
+- name: Firewall | Policy
+  become: yes
+  ufw:
+    direction: "{{ item.direction }}"
+    policy: "{{ item.policy }}"
+  with_items:
+    - { direction: incoming, policy: deny }
+    - { direction: outgoing, policy: allow }
+
+- name: Firewall | Ports
+  become: yes
+  ufw:
+    rule: limit
+    port: ssh
+
+- name: Firewall | Http/Https
+  become: yes
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+  with_items:
+    - http
+    - https
+  
+- name: Firewall | Activation
+  become: yes
+  ufw:
+    state: enabled

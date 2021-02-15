@@ -1,0 +1,17 @@
+---
+- name: Installation des serveurs web
+  hosts: web
+  remote_user: root
+
+  pre_tasks:
+    - name: "APT | Update & Upgrade"
+      become: yes
+      apt:
+        upgrade: dist
+        update_cache: yes
+    
+  roles:
+    - init
+    - tools
+    - docker
+    - firewall
